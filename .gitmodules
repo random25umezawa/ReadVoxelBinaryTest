@@ -1,0 +1,3 @@
+[submodule "ReadVoxelBinary"]
+	path = ReadVoxelBinary
+	url = https://github.com/random25umezawa/ReadVoxelBinary.git
