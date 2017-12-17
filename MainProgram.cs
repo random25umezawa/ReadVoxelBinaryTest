@@ -1,5 +1,6 @@
 using System;
 using BinaryTools;
+using System.Drawing;
 
 class MainProgram
 {
@@ -9,12 +10,29 @@ class MainProgram
 		Console.Write(vd.Type);
 		Console.WriteLine(vd.Version);
 		Console.WriteLine(vd.NumModels);
-		foreach(int[,] voxels in vd.Xyzas)
+		
+		int[,] sizes = vd.Sizes;
+		int[][,,] danmens = vd.Danmens;
+		for(int model_index = 0; model_index < vd.NumModels; model_index++)
 		{
-			Console.WriteLine(voxels.Length);
-			for(int i = 0; i < voxels.Length/4; i++) {
-				Console.WriteLine("({0,3:G},{1,3:G},{2,3:G},{3,3:G})",voxels[i,0],voxels[i,1],voxels[i,2],voxels[i,3]);
+			Bitmap img = new Bitmap(sizes[model_index,0]*sizes[model_index,2],sizes[model_index,1]);
+			img.MakeTransparent();
+			for(int i = 0; i < sizes[model_index,0]*sizes[model_index,2]; i++)
+			{
+				for(int j = 0; j < sizes[model_index,1]; j++)
+				{
+					Color c = Color.FromArgb
+					(
+						danmens[model_index][i,j,3],
+						danmens[model_index][i,j,0],
+						danmens[model_index][i,j,1],
+						danmens[model_index][i,j,2]
+					);
+					img.SetPixel(i,j,c);
+				}
 			}
+			img.Save("result/"+model_index+".png",System.Drawing.Imaging.ImageFormat.Png);
+			img.Dispose();
 		}
 	}
 }
